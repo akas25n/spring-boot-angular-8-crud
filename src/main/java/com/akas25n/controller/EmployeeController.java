@@ -8,18 +8,15 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.akas25n.exceptions.ResourceNotFoundException;
 import com.akas25n.model.Employee;
 import com.akas25n.repository.EmployeeRepository;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping(path="/")
+@RequestMapping(path="/api")
 public class EmployeeController {
 	
 	@Autowired
@@ -40,11 +37,12 @@ public class EmployeeController {
 	
 	@RequestMapping(value = "/employees", method = RequestMethod.POST)
 	public Employee createNewEmployee(@Valid @RequestBody Employee employee) {
+
 		return employeeRepository.save(employee);
 	}
 	
 	@RequestMapping(value = "/employees/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee newEmployee, @PathVariable(value = "id") long employeeId) throws ResourceNotFoundException{
+	public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee newEmployee, @PathVariable(value = "id") Long employeeId) throws ResourceNotFoundException{
 		Employee employee = employeeRepository.findById(employeeId)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
 		employee.setFirstName(newEmployee.getFirstName());
